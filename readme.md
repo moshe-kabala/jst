@@ -9,7 +9,7 @@ The package includes some functionalities to  serializing and deserializing json
 # Example
 ```
 
-use crate::json::{Value, Json};
+use json::{Value, Json};
 
 fn main() {
 
