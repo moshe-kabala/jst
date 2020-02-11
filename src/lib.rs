@@ -70,8 +70,8 @@ mod tests {
 
         let cases = [
             (
-                "[3, 5, null]",
-                Value::Array(vec![Value::Num(3.0), Value::Num(3.0), Value::Null]),
+                r#"[3, 5, null]"#,
+                Value::Array(vec![Value::Num(3.0), Value::Num(5.0), Value::Null]),
             ),
             (
                 r#"[{"key": "val"}, [2]]"#,
@@ -84,7 +84,7 @@ mod tests {
             if let Ok(v) = val {
                 assert_eq!(v, *expected)
             } else if let Err(e) = val {
-                panic!("{}", e );
+                panic!("json: {} ,error: {}", value, e );
             }
         }
     }

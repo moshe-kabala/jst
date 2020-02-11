@@ -283,7 +283,7 @@ impl Parser<'_> {
 
     fn is_index_match(&self, c: &str) -> bool {
         let Parser { bytes, index, .. } = self;
-        if bytes.len() <= c.len() + *index {
+        if bytes.len() < c.len() + *index {
             return false;
         }
         let content: &str = str::from_utf8(&bytes[*index..(*index + c.len())]).unwrap();
