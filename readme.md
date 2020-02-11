@@ -53,12 +53,21 @@ fn main() {
 }
 ```
 
+```
+let val = Value::from("[3, 5, null]");
+
+if let Ok(v) = val) {
+  assert_eq!(v, Value::Array(vec![Value::Num(3.0), Value::Num(3.0), Value::Null])) // true
+}
+```
+
 
 ## Todo
 
 1. Improve Tests
 2. Improve indexer (solve range indexer for string and array)
 3. Adding Error code
+4. Adding json macro
 
 # Deceleration
 The code written only for practicing rust. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)

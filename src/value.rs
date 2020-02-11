@@ -1,7 +1,7 @@
 use std;
 use std::{fmt, ops::Index};
 
-use crate::Json;
+use crate::{Json, Parser, ParserErr};
 
 #[derive(PartialEq)]
 pub enum Value {
@@ -35,6 +35,7 @@ impl Index<usize> for Value {
     }
 }
 
+// todo adding range index
 // impl Index<Range<usize>> for Value {
 //     type Output = Value;
 
@@ -47,6 +48,13 @@ impl Index<usize> for Value {
 //         }
 //     }
 // }
+
+impl Value {
+    pub fn from(str: &str) -> Result<Value, ParserErr> {
+        let mut parser = Parser::new(str);
+        parser.parse(true)
+    }
+}
 
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

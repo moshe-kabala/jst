@@ -17,6 +17,12 @@ pub struct ParserErr {
     index: usize,
 }
 
+impl fmt::Display for ParserErr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 impl ParserErr {
     pub fn new(msg: String, parser: &Parser) -> ParserErr {
         ParserErr {
@@ -259,7 +265,7 @@ impl Parser<'_> {
                 self.advance_index();
                 return Ok(Value::Array(result));
             } else {
-                return ParserErr::unexpected("',' ]'", self);
+                return ParserErr::unexpected("',' or ']'", self);
             }
         }
         ParserErr::never_ended("Array", start_at_line, start_at_char, self)
