@@ -1,5 +1,5 @@
 [package]
-name = "rust-json"
+name = "json"
 version = "0.1.0"
 authors = ["moshe.kabala@gmail.com <31233967+moshe-kabala@users.noreply.github.com>"]
 edition = "2018"
