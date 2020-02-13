@@ -1,17 +1,14 @@
-use std;
-use std::fmt;
-
-use std::ops::Index;
+use std::{self, collections::HashMap, fmt, ops::Index};
 
 use crate::{Parser, ParserErr, Value};
 
 #[derive(PartialEq)]
-pub struct Json(std::collections::HashMap<String, Value>);
+pub struct Json(HashMap<String, Value>);
 
 impl Index<&str> for Json {
-    type Output =  Value;
+    type Output = Value;
 
-    fn index(& self, key: &str) -> &Value {
+    fn index(&self, key: &str) -> &Value {
         let r = self.get(key);
         if let Some(v) = r {
             v
@@ -23,7 +20,7 @@ impl Index<&str> for Json {
 
 impl Json {
     pub fn new() -> Self {
-        Json(std::collections::HashMap::new())
+        Json(HashMap::new())
     }
 
     pub fn from(str: &str) -> Result<Value, ParserErr> {
