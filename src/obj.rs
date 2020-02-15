@@ -28,6 +28,10 @@ impl Json {
         parser.parse(true)
     }
 
+    pub fn from_map(v: HashMap<String, Value>)->Self {
+        Self(v)
+    }
+
     pub fn len(&self) -> usize {
         self.0.len()
     }
