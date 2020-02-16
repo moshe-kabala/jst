@@ -5,6 +5,7 @@ The package includes some functionalities to  serializing and deserializing json
 1. Json data structure
 2. Json parser
 3. Json to string
+4. Macros to writh json like Java Script object
 
 # Example
 ```
@@ -65,7 +66,8 @@ if let Ok(v) = val) {
 
 
 
-# Converters and Macros
+# Convertors and Macros
+
 ## Macros
 The package support json!, value! and array macros to write any json object in much more convinces way (instead of string). 
 
@@ -92,12 +94,13 @@ The package support json!, value! and array macros to write any json object in m
 ```
 
 ### value macro
-Create any json value enum
+Create json::Value enum from any valid json format
 ```
 
 let str = value!("some string");
 let num = value!("some string");
 let bool = value!("some string");
+let null = value!(null);
 let array = value!(["string", 45]);
 
 
@@ -109,12 +112,12 @@ let json = value!({
 ```
 
 ### array macro
-Create a Vec<json::Value> vector.
+Create a Vec\<json::Value\> vector.
 ```
 // the type is Vec<Value>
 let array2 = array!["string", 45, true, [], {key: "value"}];
 ```
-## Conversion
+## Convertors
 Form any numerical number, String, &str, boolean and HashMap<String, json::Value> you can call 'into()' method to convert the value to Json Value enum
 
 ```
