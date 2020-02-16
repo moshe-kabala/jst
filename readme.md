@@ -1,14 +1,100 @@
 # Json
 
-The package includes some functionalities to  serializing and deserializing json with rust
+The package includes:
 
-1. Json data structure
-2. Json parser
-3. Json to string
+1. JSON data structure
+2. JSON parser
+3. JSON to string
+4. Macros to writing JSON same as a Javascript object
 
-# Example
+
+# Convertors and Macros
+
+## Macros
+The package support json!, value!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntex and getting complision error). 
+
+### Json macro
+```
+    let key = "var_key";
+
+    let person = json! {
+        name: "jhon",
+        like_rust: true,
+        like_go: null,
+        emails : [
+            "some@gmail.com",
+            "some2@gmail.com"
+        ],
+        address: {
+            city: "somewhere",
+            zip: 5612
+        },
+        "literal": true,
+        [key]: "var_key",
+        age: 56
+    };
 ```
 
+### value macro
+Create json::Value enum from any valid json format
+```
+
+let str = value!("some string");
+let num = value!(45);
+let bool = value!(true);
+let null = value!(null);
+let array = value!(["string", 45]);
+
+
+let json = value!({
+  key:"string", 
+  num:45
+});
+
+```
+
+### array macro
+Create a Vec\<json::Value\> vector.
+```
+// the type is Vec<Value>
+let array2 = array!["string", 45, true, [], {key: "value"}];
+```
+## Convertors
+Form any numerical number, String, &str, boolean and HashMap<String, json::Value> you can call 'into()' method to convert the value to Json Value enum
+
+```
+let str:Value = "some string".into();
+let num:Value = 78.into();
+let bool:Value = true.into();
+let array:Value = vec!["string".into(), 45.into()];
+
+// the short way is to use macros (json!, value! and array!)
+
+let str = value!("some string");
+let num = value!(54);
+let bool = value!(true);
+let null = value!(null);
+let array = value!(["string", 45]);
+// the type is Vec<Value>
+let array2 = array!["string", 45];
+
+let json = value!({
+  key:"string", 
+  num:45
+});
+// the type is Json
+let json2 = json!{
+  key:"string", 
+  num:45
+};
+
+
+```
+
+
+# Parser
+Parse a json from a string 
+```
 use json::{Value, Json};
 
 fn main() {
@@ -61,90 +147,8 @@ if let Ok(v) = val) {
 }
 ```
 
-
-
-
-
-# Converters and Macros
-## Macros
-The package support json!, value! and array macros to write any json object in much more convinces way (instead of string). 
-
-### Json macro
-```
-    let key = "var_key";
-
-    let person = json! {
-        name: "jhon",
-        like_rust: true,
-        like_go: null,
-        emails : [
-            "some@gmail.com",
-            "some2@gmail.com"
-        ],
-        address: {
-            city: "somewhere",
-            zip: 5612
-        },
-        "literal": true,
-        [key]: "var_key",
-        age: 56
-    };
-```
-
-### value macro
-Create any json value enum
-```
-
-let str = value!("some string");
-let num = value!("some string");
-let bool = value!("some string");
-let array = value!(["string", 45]);
-
-
-let json = value!({
-  key:"string", 
-  num:45
-});
-
-```
-
-### array macro
-Create a Vec<json::Value> vector.
-```
-// the type is Vec<Value>
-let array2 = array!["string", 45, true, [], {key: "value"}];
-```
-## Conversion
-Form any numerical number, String, &str, boolean and HashMap<String, json::Value> you can call 'into()' method to convert the value to Json Value enum
-
-```
-let str:Value = "some string".into();
-let num:Value = 78.into();
-let bool:Value = true.into();
-let array:Value = vec!["string".into(), 45.into()];
-
-// the short way is to use macros (json!, value! and array!)
-
-let str = value!("some string");
-let num = value!("some string");
-let bool = value!("some string");
-let array = value!(["string", 45]);
-// the type is Vec<Value>
-let array2 = array!["string", 45];
-
-let json = value!({
-  key:"string", 
-  num:45
-});
-// the type is Json
-let json2 = json!{
-  key:"string", 
-  num:45
-};
-
-
-```
-
+# Deceleration
+The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
 
 ## Todo
 
@@ -154,8 +158,6 @@ let json2 = json!{
 4. Adding more tests for json, array and value macros
 5. Adding json-schema validator
 
-# Deceleration
-The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
 
 # Licence
 MIT
