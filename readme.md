@@ -62,15 +62,100 @@ if let Ok(v) = val) {
 ```
 
 
+
+
+
+# Converters and Macros
+## Macros
+The package support json!, value! and array macros to write any json object in much more convinces way (instead of string). 
+
+### Json macro
+```
+    let key = "var_key";
+
+    let person = json! {
+        name: "jhon",
+        like_rust: true,
+        like_go: null,
+        emails : [
+            "some@gmail.com",
+            "some2@gmail.com"
+        ],
+        address: {
+            city: "somewhere",
+            zip: 5612
+        },
+        "literal": true,
+        [key]: "var_key",
+        age: 56
+    };
+```
+
+### value macro
+Create any json value enum
+```
+
+let str = value!("some string");
+let num = value!("some string");
+let bool = value!("some string");
+let array = value!(["string", 45]);
+
+
+let json = value!({
+  key:"string", 
+  num:45
+});
+
+```
+
+### array macro
+Create a Vec<json::Value> vector.
+```
+// the type is Vec<Value>
+let array2 = array!["string", 45, true, [], {key: "value"}];
+```
+## Conversion
+Form any numerical number, String, &str, boolean and HashMap<String, json::Value> you can call 'into()' method to convert the value to Json Value enum
+
+```
+let str:Value = "some string".into();
+let num:Value = 78.into();
+let bool:Value = true.into();
+let array:Value = vec!["string".into(), 45.into()];
+
+// the short way is to use macros (json!, value! and array!)
+
+let str = value!("some string");
+let num = value!("some string");
+let bool = value!("some string");
+let array = value!(["string", 45]);
+// the type is Vec<Value>
+let array2 = array!["string", 45];
+
+let json = value!({
+  key:"string", 
+  num:45
+});
+// the type is Json
+let json2 = json!{
+  key:"string", 
+  num:45
+};
+
+
+```
+
+
 ## Todo
 
-1. Improve Tests
-2. Improve indexer (solve range indexer for string and array)
+1. Improve parser tests
+2. Improve indexer (enable to set a value by index)
 3. Adding Error code
-4. Adding json macro
+4. Adding more tests for json, array and value macros
+5. Adding json-schema validator
 
 # Deceleration
-The code written only for practicing rust. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
+The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
 
 # Licence
 MIT

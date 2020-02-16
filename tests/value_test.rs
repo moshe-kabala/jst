@@ -1,5 +1,5 @@
 #![recursion_limit = "256"]
-#[macro_use(json, value)]
+#[macro_use(json, value, array)]
 extern crate json;
 
 use json::{Json, Value};
@@ -84,22 +84,65 @@ fn check_array_parser() {
 
 #[test]
 fn test_json_macro() {
+    let key = "var_key";
+
     let person = json! {
         name: "jhon",
-        age: 45
-
+        like_rust: true,
+        like_go: null,
+        emails : [
+            "some@gmail.com",
+            "some2@gmail.com"
+        ],
+        address: {
+            city: "somewhere",
+            zip: 5612
+        },
+        "literal": true,
+        [key]: "var_key",
+        age: 56
     };
 
-    // age: 32,
-    // like_rust: true,
-    // like_go: null,
-    // // emails : ["some@gmail.com", "some2@gmail.com"],
-    // address: {
-    //     city: "somewhere"
-    // }
-
     // let array = jv!["value in array"];
+    assert_eq!(person["name"], value!("jhon"), "person is {:?}", person);
+    assert_eq!(person["like_rust"], value!(true), "person is {:?}", person);
+    assert_eq!(
+        person["var_key"],
+        value!("var_key"),
+        "person is {:?}",
+        person
+    );
+    assert_eq!(person["literal"], value!(true), "person is {:?}", person);
+    assert_eq!(person["age"], value!(56), "person is {:?}", person);
+    assert_eq!(
+        person["emails"],
+        value!(["some@gmail.com", "some2@gmail.com"]),
+        "person is {:?}",
+        person
+    );
+    assert_eq!(
+        person["address"],
+        value!({ city: "somewhere",
+    zip: 5612}),
+        "person is {:?}",
+        person
+    );
 
-    // assert_eq!(json["key"], Value::Str("my value".into()));
-    // assert_eq!(json["array"], Value::Array(vec!["string".into()]));
+}
+#[test]
+fn test_array_macro() {
+    let emails = array!["some@gmail.com", "some2@gmail.com"];
+    assert_eq!(
+        emails,
+        vec![value!("some@gmail.com"), value!("some2@gmail.com")]
+    );
+}
+
+#[test]
+fn test_value_macro() {
+    let emails = array!["some@gmail.com", "some2@gmail.com"];
+    assert_eq!(
+        emails,
+        vec![value!("some@gmail.com"), value!("some2@gmail.com")]
+    );
 }

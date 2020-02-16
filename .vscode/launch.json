@@ -12,6 +12,7 @@
                 "args": [
                     "test",
                     "--no-run",
+                    "--nocapture",
                     "--lib",
                     "--package=json"
                 ],

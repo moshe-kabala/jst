@@ -156,21 +156,71 @@ impl_from_num!(usize, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64
 
 #[macro_export(json_macros)]
 macro_rules! value {
- (null) => (Value::Null);
- ([$($val:expr),*]) => (Value::Array(jv![$($val),*]));
- ({$($tt:tt )+}) => (Value::Obj({$($tt),*}));
- ($val:expr) => ($val.into());
+    ([$($tt:tt)*]) => (Value::Array(array![$($tt)*]));
+    ({$($tt:tt )*}) => (Value::Obj(json!{$($tt)*}));
+    (null) => (Value::Null);
+    ($val:expr) => ($val.into());
+
+ // call anther macro with next values rules
+
+ //handle with array value
+ (@next ([$($val:tt)*], $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+     $($next)*($($args)* ([$($val)*]) ($($rest)+));
+ );
+ //handle with json value
+ (@next ({$($val:tt)*}, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+     $($next)*($($args)* ({$($val)*}) ($($rest)+));
+    );
+    //handle with json value
+    (@next (null, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+        $($next)*($($args)* (null) ($($rest)+));
+    );
+    //handle with expression value
+(@next ($val:expr, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+    $($next)*($($args)* ($val) ($($rest)+));
+ );
+
+
+
+  //handle with null value
+(@next (null, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+    $($next)*($($args)* (null) ($($rest)+));
+);
+
+ // catch the last value
+(@next ($($val:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+    $($next)*($($args)* ($($val)+));
+);
+
 }
 
 #[macro_export(json_macros)]
 macro_rules! array {
-    [$( $val:tt ),*] => (
+    (@push $array:ident ($($val:tt)+)) => (
+        $array.push( value!($($val)*));
+     );
+
+
+    (@push_and_continue $array:ident  ($($val:tt)+) ($($rest:tt)+)) => (
+        array!(@push $array ($($val)*));
+        array!(@next_value $array ($($rest)*));
+    );
+
+    // not continue (there is no rest)
+    (@push_and_continue $array:ident  ($($val:tt)+)) => (
+        array!(@push $array  ($($val)*));
+    );
+
+
+     (@next_value $array:ident ($($rest:tt)*))=> (
+        value!(@next ($($rest)*) (array!) (@push_and_continue $array ));
+     );
+
+     [$($tt:tt)*] => (
         {
-            let mut v: Vec<Value>= Vec::new();
-            $(
-               v.push( array!($val));
-            )*
-            v
+            let mut array: Vec<Value>= Vec::new();
+            array!(@next_value array ($($tt)*));
+            array
         }
      );
 }
@@ -178,7 +228,9 @@ macro_rules! array {
 #[macro_export(json_macros)]
 macro_rules! json{
 
-
+    (@key $key:literal) => (
+        $key.into()
+    );
 
     (@key $key:ident) => (
         stringify!($key)
@@ -188,58 +240,44 @@ macro_rules! json{
         $key.into()
     );
 
-  
+
 
 
     // set
     (@set $json:ident ($($key:tt)+) ($($val:tt)+)) => (
-        //$json.set(json!(@key $($key)*), value!($($val)*));
+        $json.set(json!(@key $($key)*), value!($($val)*));
     );
 
-    // // handle with array value
-    // (@next_value $json:ident ($($key:tt)+) ([$($val:tt)*], $($rest:tt)*)) => (
-    //     json!(@set ($($key)*) ([$($val)*]));
-    //     json!(@next_key $json ($($rest:tt)*));
-    // );
 
-    // // handle with object value
-    // (@next_value $json:ident ($($key:tt)+) ({$($val:tt)*}, $($rest:tt)*)) => (
-    //     json!(@set ($($key)*) ({$($val)*}));
-    //     json!(@next_key $json ($($rest:tt)*));
-    // );
-
-    //  // handle with null value
-    //  (@next_value $json:ident ($($key:tt)+) ($val:ident, $($rest:tt)*)) => (
-    //     json!(@set ($($key)*) ($val));
-    //     json!(@next_key $json ($($rest:tt)*));
-    // );
-
-     // handle with expression value
-     (@next_value $json:ident ($($key:tt)+) ($val:expr, $($rest:tt)+)) => (
-        json!(@set $json ($($key)*) ($val));
+    (@set_and_continue $json:ident ($($key:tt)+) ($($val:tt)+) ($($rest:tt)+)) => (
+        json!(@set $json ($($key)*)  ($($val)*));
         json!(@next_key $json ($($rest)*));
     );
 
-     // handle with expression value
-    // (@next_value $json:ident ($($key:tt)+) ($val:expr)) => (
-        
-    // );
+    // not continue (there is no rest)
+    (@set_and_continue $json:ident ($($key:tt)+) ($($val:tt)+)) => (
+        json!(@set $json ($($key)*) ($($val)*));
+    );
 
-    // catch the last key value
-    (@next_value $json:ident ($key:ident) ($($val:tt)+)) => (
-        json!(@set ($($key)*) ($($val)*));
+     //
+    (@next_value $json:ident ($($key:tt)+) ($($rest:tt)+)) => (
+        value!(@next ($($rest)*) (json!) (@set_and_continue $json ($($key)*)));
+    );
+
+    (@next_key $json:ident ($key:literal: $($rest:tt)+)) => (
+        json!(@next_value $json ($key) ($($rest)*));
     );
 
     (@next_key $json:ident ($key:ident: $($rest:tt)+)) => (
         json!(@next_value $json ($key) ($($rest)*));
     );
 
-    (@next_key $json:ident (($key:expr): $($rest:tt)+)) => (
+    (@next_key $json:ident ([$key:expr] : $($rest:tt)+)) => (
         json!(@next_value $json ($key) ($($rest)*));
     );
 
 
-
+   // first station
    {$($tt:tt)+} => (
      {
          let mut j = Json::new();
