@@ -29,14 +29,15 @@ fn test_json_macro() {
         from_var: var_value,
         from_macro: value!("from_macro string"),
         from_value_var: Value::Str("from_value_var string".into()),
-        // todo:
-        // empty_obj: {},
-        // empty_array: [],
+        empty_obj: {},
+        empty_array: [],
         bool: true,
         "literal": true,
         [key]: "var_key",
         age: 56
     };
+
+    let empty_obj = json!{};
 
     // let array = jv!["value in array"];
     assert_eq!(person["name"], value!("jhon"));
@@ -66,4 +67,6 @@ fn test_json_macro() {
         "person is {:?}",
         person
     );
+
+    assert_eq!(empty_obj, Json::new());
 }

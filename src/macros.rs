@@ -2,11 +2,11 @@
 
 #[macro_export(json_macros)]
 macro_rules! value {
-    ([$($tt:tt)*]) => (Value::Array(array![$($tt)*]));
     ([]) => (Value::Array(array![]));
+    ({}) => (Value::Obj(json!{}));
+    ([$($tt:tt)*]) => (Value::Array(array![$($tt)*]));
     (null) => (Value::Null);
     ({$($tt:tt )*}) => (Value::Obj(json!{$($tt)*}));
-    ({}) => (Value::Obj(json!{}));
     ($val:expr) => ( Value::from($val));
 
     // call anther macro with next values rules
@@ -44,6 +44,14 @@ macro_rules! value {
 
 #[macro_export(json_macros)]
 macro_rules! array {
+    // empty array
+    [] => (
+        {
+           let v:Vec<Value> = vec![];
+           v
+        }
+    );
+
     (@push $array:ident ($($val:tt)+)) => (
         $array.push( value!($($val)*));
      );
@@ -71,13 +79,14 @@ macro_rules! array {
              array
             }
         );
-        [] => (
-            Vec<Value>::new();
-        );
 }
 
 #[macro_export(json_macros)]
 macro_rules! json{
+    // empty object
+    {} => (
+        Json::new()
+    );
 
     (@key $key:literal) => (
         $key.into()
@@ -135,8 +144,5 @@ macro_rules! json{
          json!(@next_key j ($($tt)*));
          j
      }
-    );
-    {} => (
-        Json::new()
     );
 }

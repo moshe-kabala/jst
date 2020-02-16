@@ -35,42 +35,28 @@ fn test_json_parser() {
 
     if let Ok(Value::Obj(v)) = from_string {
         assert_eq!(v.len(), 11);
-        assert_eq!(v["number"], Value::Num(56.0));
+        assert_eq!(v["number"], value!(56.0));
         assert_eq!(
             v["nested_obj"]["nested1"]["nested2"]["key1"],
-            Value::Str("some value".into())
+            value!("some value")
         );
-        assert_eq!(v["boolean_true"], Value::Bool(true));
-        assert_eq!(v["boolean_false"], Value::Bool(false));
-        assert_eq!(v["null"], Value::Null);
-        assert_eq!(v["array"][0], Value::Num(4564.0));
-        assert_eq!(v["array"][1], Value::Str("some string".into()));
-        assert_eq!(v["array"][2]["blo"], Value::Str("sfsf".into()));
-        assert_eq!(
-            v["array"][7],
-            Value::Array(vec![Value::Num(4.0), Value::Num(5.0)])
-        );
+        assert_eq!(v["boolean_true"], value!(true));
+        assert_eq!(v["boolean_false"], value!(false));
+        assert_eq!(v["null"], value!(null));
+        assert_eq!(v["array"][0], value!(4564.0));
+        assert_eq!(v["array"][1], value!("some string"));
+        assert_eq!(v["array"][2]["blo"], value!("sfsf"));
+        assert_eq!(v["array"][7], value!([4, 5]));
     } else if let Err(e) = from_string {
         panic!("{}", e);
     }
 }
 
-
-
 #[test]
 fn test_array_parser() {
-    let mut obj = Json::new();
-    obj.set("key", Value::Str("val".into()));
-
     let cases = [
-        (
-            r#"[3, 5, null]"#,
-            Value::Array(vec![Value::Num(3.0), Value::Num(5.0), Value::Null]),
-        ),
-        (
-            r#"[{"key": "val"}, [2]]"#,
-            Value::Array(vec![Value::Obj(obj), Value::Array(vec![Value::Num(2.0)])]),
-        ),
+        (r#"[3, 5, null]"#, value!([3, 5, null])),
+        (r#"[{"key": "val"}, [2]]"#, value!([{key: "val"}, [2]])),
     ];
 
     for (value, expected) in cases.iter() {

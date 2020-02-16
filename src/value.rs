@@ -1,4 +1,4 @@
-use std::{self, collections::HashMap, fmt, ops::Index};
+use std::{self, fmt, ops::Index};
 
 use crate::{Json, Parser, ParserErr};
 
