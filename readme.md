@@ -5,7 +5,7 @@ The package includes some functionalities to  serializing and deserializing json
 1. Json data structure
 2. Json parser
 3. Json to string
-4. Macros to writh json like Java Script object
+4. Macros for write json like a Javascript object
 
 
 # Convertors and Macros
