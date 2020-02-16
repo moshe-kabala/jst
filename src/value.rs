@@ -10,7 +10,7 @@ pub enum Val {
     Array(Vec<Val>),
     Bool(bool),
     Null,
-    Undefined
+    Undef,
 }
 
 impl Index<&str> for Val {
@@ -19,7 +19,7 @@ impl Index<&str> for Val {
     fn index(&self, key: &str) -> &Val {
         match self {
             Val::Obj(obj) => obj.index(key),
-            _ => &Val::Undefined,
+            _ => &Val::Undef,
         }
     }
 }
@@ -30,7 +30,7 @@ impl Index<usize> for Val {
     fn index(&self, key: usize) -> &Val {
         match self {
             Val::Array(a) => &a[key],
-            _ => &Val::Undefined,
+            _ => &Val::Undef,
         }
     }
 }
@@ -97,7 +97,7 @@ impl fmt::Debug for Val {
                 }
             }
             Val::Null => "null".into(),
-            Val::Undefined => "".into(),
+            Val::Undef => "undefined".into(),
         };
 
         write!(f, "{}", val)
