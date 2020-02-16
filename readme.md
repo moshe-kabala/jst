@@ -45,7 +45,6 @@ let bool = val!(true);
 let null = val!(null);
 let array = val!(["string", 45]);
 
-
 let json = val!({
   key:"string", 
   num:45

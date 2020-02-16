@@ -1,11 +1,40 @@
 // use crate::{Obj, Val};
 
+///
+/// ## Value Macro
+/// Create json::Val enum from any valid json format
+/// 
+/// ### examples
+// / ```
+// / #[macro_use(val, obj, array)]
+// / extern crate json;
+// / 
+// / use json::{Val, Obj};
+// / 
+// / let str = val!("some string");
+// / let num = val!(45);
+// / let bool = val!(true);
+// / let null = val!(null);
+// / let array = val!([
+// /     "string", 
+// /     45,
+// /     null,
+// /     [{key: "val"}, undefined]
+// / ]);
+// / 
+// / let json = val!({
+// /   key:"string", 
+// /   num:45
+// / });
+// / ```
+/// 
 #[macro_export(json_macros)]
 macro_rules! val {
     ([]) => (Val::Array(array![]));
     ({}) => (Val::Obj(obj!{}));
     ([$($tt:tt)*]) => (Val::Array(array![$($tt)*]));
     (null) => (Val::Null);
+    (undefined) => (Val::Undef);
     ({$($tt:tt)*}) => (Val::Obj(obj!{$($tt)*}));
     ($val:expr) => ( Val::from($val));
 
@@ -51,6 +80,10 @@ macro_rules! val {
     (@next (null, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
         $($next)*($($args)* (null) ($($rest)+));
     );
+     //handle with undefined value
+     (@next (undefined, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
+        $($next)*($($args)* (undefined) ($($rest)+));
+    );
     //handle with expression value
     (@next ($val:expr, $($rest:tt)+) ($($next:tt)+) ($($args:tt)+)) => (
         $($next)*($($args)* ($val) ($($rest)+));
@@ -61,9 +94,13 @@ macro_rules! val {
     (@next ({$($val:tt)*}) ($($next:tt)+) ($($args:tt)+)) => (
         $($next)*($($args)* ({$($val)*}));
     );
-    //handle with json value
+    //handle with null value
     (@next (null) ($($next:tt)+) ($($args:tt)+)) => (
         $($next)*($($args)* (null));
+    );
+    //handle with undefined value
+    (@next (undefined) ($($next:tt)+) ($($args:tt)+)) => (
+        $($next)*($($args)* (undefined));
     );
     //handle with expression value
     (@next ($val:expr) ($($next:tt)+) ($($args:tt)+)) => (
