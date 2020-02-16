@@ -71,8 +71,9 @@ let array:Value = vec!["string".into(), 45.into()];
 // the short way is to use macros (json!, value! and array!)
 
 let str = value!("some string");
-let num = value!("some string");
-let bool = value!("some string");
+let num = value!(54);
+let bool = value!(true);
+let null = value!(null);
 let array = value!(["string", 45]);
 // the type is Vec<Value>
 let array2 = array!["string", 45];
@@ -146,6 +147,9 @@ if let Ok(v) = val) {
 }
 ```
 
+# Deceleration
+The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
+
 ## Todo
 
 1. Improve parser tests
@@ -154,8 +158,6 @@ if let Ok(v) = val) {
 4. Adding more tests for json, array and value macros
 5. Adding json-schema validator
 
-# Deceleration
-The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
 
 # Licence
 MIT
