@@ -2,10 +2,10 @@
 
 The package includes:
 
-1. Json data structure
-2. Json parser
-3. Json to string
-4. Macros for write json like a Javascript object
+1. JSON data structure
+2. JSON parser
+3. JSON to string
+4. Macros to writing JSON same as a Javascript object
 
 
 # Convertors and Macros
