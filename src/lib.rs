@@ -4,8 +4,12 @@ extern crate num;
 
 mod obj;
 mod parser;
+mod convertors;
 #[macro_use]
+mod macros;
 mod value;
+
+
 
 
 pub use self::obj::Json;
