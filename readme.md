@@ -40,8 +40,8 @@ Create json::Value enum from any valid json format
 ```
 
 let str = value!("some string");
-let num = value!("some string");
-let bool = value!("some string");
+let num = value!(45);
+let bool = value!(true);
 let null = value!(null);
 let array = value!(["string", 45]);
 
