@@ -7,69 +7,11 @@ The package includes some functionalities to  serializing and deserializing json
 3. Json to string
 4. Macros to writh json like Java Script object
 
-# Example
-```
-
-use json::{Value, Json};
-
-fn main() {
-
-  let mut j = Json::new();
-
-  let from_string = Json::from(
-    r#"{
-      "number": 56,
-      "string": "some string\" string",
-      "boolean_true": true,
-      "boolean_false": false,
-      "null": null,
-      "obj": {
-        "key1": 456
-      },
-      "empty_obj": {},
-      "empty_obj_new_line": {
-
-      },
-      "nested_obj" : {
-        "nested1": {
-          "nested2": {
-            "key1": "some value",
-            "key2": "anther value"
-          }
-        }
-      },
-      "array": [4564, "some string", {"bla":90, "blo": "sfsf"}, null, true, false, [], [4,5]],
-      "key": 2
-    }
-  "#,
-  );
-
-
-  // Print either json or err
-  if let Ok(Value::Obj(v)) = from_string {
-    println!("{:?}", v);
-  } else if let Err(e) = from_string {
-    println!("{:?}", e)
-  }
-}
-```
-
-```
-let val = Value::from("[3, 5, null]");
-
-if let Ok(v) = val) {
-  assert_eq!(v, Value::Array(vec![Value::Num(3.0), Value::Num(5.0), Value::Null])) // true
-}
-```
-
-
-
-
 
 # Convertors and Macros
 
 ## Macros
-The package support json!, value! and array macros to write any json object in much more convinces way (instead of string). 
+The package support json!, value!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntex and getting complision error). 
 
 ### Json macro
 ```
@@ -148,6 +90,61 @@ let json2 = json!{
 
 ```
 
+
+# Parser
+Parse a json from a string 
+```
+use json::{Value, Json};
+
+fn main() {
+
+  let mut j = Json::new();
+
+  let from_string = Json::from(
+    r#"{
+      "number": 56,
+      "string": "some string\" string",
+      "boolean_true": true,
+      "boolean_false": false,
+      "null": null,
+      "obj": {
+        "key1": 456
+      },
+      "empty_obj": {},
+      "empty_obj_new_line": {
+
+      },
+      "nested_obj" : {
+        "nested1": {
+          "nested2": {
+            "key1": "some value",
+            "key2": "anther value"
+          }
+        }
+      },
+      "array": [4564, "some string", {"bla":90, "blo": "sfsf"}, null, true, false, [], [4,5]],
+      "key": 2
+    }
+  "#,
+  );
+
+
+  // Print either json or err
+  if let Ok(Value::Obj(v)) = from_string {
+    println!("{:?}", v);
+  } else if let Err(e) = from_string {
+    println!("{:?}", e)
+  }
+}
+```
+
+```
+let val = Value::from("[3, 5, null]");
+
+if let Ok(v) = val) {
+  assert_eq!(v, Value::Array(vec![Value::Num(3.0), Value::Num(5.0), Value::Null])) // true
+}
+```
 
 ## Todo
 
