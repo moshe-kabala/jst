@@ -1,6 +1,6 @@
 use std::{fmt, str};
 
-use crate::{Json, Value};
+use crate::{Obj, Val};
 
 #[derive(Default)]
 pub struct Parser<'a> {
@@ -33,7 +33,7 @@ impl ParserErr {
         }
     }
 
-    pub fn unexpected(expected: &str, parser: &Parser) -> Result<Value, ParserErr> {
+    pub fn unexpected(expected: &str, parser: &Parser) -> Result<Val, ParserErr> {
         let Parser { index, bytes, .. } = parser;
         let end = if index + 5 < bytes.len() {
             index + 5
@@ -55,7 +55,7 @@ impl ParserErr {
         start_at_line: usize,
         start_at_char: usize,
         parser: &Parser,
-    ) -> Result<Value, ParserErr> {
+    ) -> Result<Val, ParserErr> {
         let msg = format!(
             "{} start at {}, {}, never ended.",
             val_type, start_at_line, start_at_char
@@ -88,7 +88,7 @@ impl Parser<'_> {
         }
     }
 
-    pub fn parse(&mut self, check_else: bool) -> Result<Value, ParserErr> {
+    pub fn parse(&mut self, check_else: bool) -> Result<Val, ParserErr> {
         self.continue_empty();
         let c: char = self.bytes[self.index].into();
         let result = match c {
@@ -111,7 +111,7 @@ impl Parser<'_> {
         }
     }
 
-    pub fn parse_string(&mut self) -> Result<Value, ParserErr> {
+    pub fn parse_string(&mut self) -> Result<Val, ParserErr> {
         let mut result_str = String::new();
         self.continue_empty();
         if !self.is_index_match("\"") {
@@ -129,7 +129,7 @@ impl Parser<'_> {
             match c {
                 c if c == '"' && !result_str.ends_with("\\") => {
                     self.advance_index();
-                    return Ok(Value::Str(result_str));
+                    return Ok(Val::Str(result_str));
                 }
                 '\n' => {
                     self.new_line();
@@ -140,7 +140,7 @@ impl Parser<'_> {
         }
         ParserErr::never_ended("String", start_at_line, start_at_char, self)
     }
-    pub fn parse_number(&mut self) -> Result<Value, ParserErr> {
+    pub fn parse_number(&mut self) -> Result<Val, ParserErr> {
         let mut result = String::new();
         for i in self.index..self.bytes.len() {
             let c: char = self.bytes[i].into();
@@ -153,33 +153,33 @@ impl Parser<'_> {
             }
         }
         if result.len() > 0 {
-            Ok(Value::Num(result.parse().unwrap()))
+            Ok(Val::Num(result.parse().unwrap()))
         } else {
             ParserErr::unexpected("any number", self)
         }
     }
-    pub fn parse_boolean(&mut self) -> Result<Value, ParserErr> {
+    pub fn parse_boolean(&mut self) -> Result<Val, ParserErr> {
         if self.is_index_match("true") {
             self.index += 4;
-            Ok(Value::Bool(true))
+            Ok(Val::Bool(true))
         } else if self.is_index_match("false") {
             self.index += 5;
-            Ok(Value::Bool(false))
+            Ok(Val::Bool(false))
         } else {
             ParserErr::unexpected("'true' or 'false'", self)
         }
     }
-    pub fn parse_null(&mut self) -> Result<Value, ParserErr> {
+    pub fn parse_null(&mut self) -> Result<Val, ParserErr> {
         if self.is_index_match("null") {
             self.index += 4;
-            Ok(Value::Null)
+            Ok(Val::Null)
         } else {
             ParserErr::unexpected("'null' or any json value", self)
         }
     }
 
-    pub fn parse_object(&mut self) -> Result<Value, ParserErr> {
-        let mut result = Json::new();
+    pub fn parse_object(&mut self) -> Result<Val, ParserErr> {
+        let mut result = Obj::new();
         self.continue_empty();
         if !self.is_index_match("{") {
             return ParserErr::unexpected("'{'", self);
@@ -192,7 +192,7 @@ impl Parser<'_> {
         // if json is empty
         if self.is_index_match("}") {
             self.advance_index();
-            return Ok(Value::Obj(result));
+            return Ok(Val::Obj(result));
         }
 
         let mut i = self.index;
@@ -200,7 +200,7 @@ impl Parser<'_> {
             self.continue_empty();
             let _key = self.parse_string();
             let key;
-            if let Ok(Value::Str(v)) = _key {
+            if let Ok(Val::Str(v)) = _key {
                 key = v;
             } else {
                 return _key;
@@ -227,7 +227,7 @@ impl Parser<'_> {
                 continue;
             } else if self.is_index_match("}") {
                 self.advance_index();
-                return Ok(Value::Obj(result));
+                return Ok(Val::Obj(result));
             } else {
                 return ParserErr::unexpected("',' or '}'", self);
             }
@@ -235,7 +235,7 @@ impl Parser<'_> {
         ParserErr::never_ended("Object", start_at_line, start_at_char, self)
     }
 
-    pub fn parse_array(&mut self) -> Result<Value, ParserErr> {
+    pub fn parse_array(&mut self) -> Result<Val, ParserErr> {
         let mut result = vec![];
         self.continue_empty();
         if !self.is_index_match("[") {
@@ -249,7 +249,7 @@ impl Parser<'_> {
         // if array is empty
         if self.is_index_match("]") {
             self.advance_index();
-            return Ok(Value::Array(result));
+            return Ok(Val::Array(result));
         }
         let mut i = self.index;
         while i < self.bytes.len() {
@@ -263,7 +263,7 @@ impl Parser<'_> {
                 i = self.index;
             } else if self.is_index_match("]") {
                 self.advance_index();
-                return Ok(Value::Array(result));
+                return Ok(Val::Array(result));
             } else {
                 return ParserErr::unexpected("',' or ']'", self);
             }

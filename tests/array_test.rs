@@ -1,7 +1,7 @@
-#[macro_use(json, value, array)]
+#[macro_use(obj, val, array)]
 extern crate json;
 
-use json::{Json, Value};
+use json::{Obj, Val};
 
 #[test]
 fn test_array_macro() {
@@ -12,9 +12,11 @@ fn test_array_macro() {
         {key: "value"},
         5,
         [],
-        // todo fix the bug in nested json
-        // {nested: {key: "value"}},
-        "some value"
+        {nested: {key: "value"}},
+        "some value",
+        // nested array
+        [[["val"], "val"],[]],
+        null
     ];
 
     let empty_array = array![];
@@ -22,15 +24,18 @@ fn test_array_macro() {
     assert_eq!(
         array,
         vec![
-            value!("some@gmail.com"),
-            value!(45),
-            vec![value!("value").into(), 5.into()].into(),
-            value!({key: "value"}),
+            val!("some@gmail.com"),
+            val!(45),
+            vec![val!("value").into(), 5.into()].into(),
+            val!({key: "value"}),
             5.into(),
             vec![].into(),
-            "some value".into()
+            val!({nested: {key: "value"}}),
+            "some value".into(),
+            vec![vec![vec!["val".into()].into(), "val".into()].into(), vec![].into()].into(),
+            val!(null)
         ]
     );
-    let expected_empty_array: Vec<Value> = vec![];
+    let expected_empty_array: Vec<Val> = vec![];
     assert_eq!(empty_array, expected_empty_array);
 }

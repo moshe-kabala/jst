@@ -1,40 +1,40 @@
-use crate::{Json, Value};
+use crate::{Obj, Val};
 use num::ToPrimitive;
 use std::{self, collections::HashMap};
 
-impl std::convert::From<String> for Value {
-    fn from(v: String) -> Value {
-        Value::Str(v)
+impl std::convert::From<String> for Val {
+    fn from(v: String) -> Val {
+        Val::Str(v)
     }
 }
 
-impl std::convert::From<&str> for Value {
-    fn from(v: &str) -> Value {
-        Value::Str(v.into())
+impl std::convert::From<&str> for Val {
+    fn from(v: &str) -> Val {
+        Val::Str(v.into())
     }
 }
 
-impl std::convert::From<Vec<Value>> for Value {
-    fn from(v: Vec<Value>) -> Value {
-        Value::Array(v)
+impl std::convert::From<Vec<Val>> for Val {
+    fn from(v: Vec<Val>) -> Val {
+        Val::Array(v)
     }
 }
 
-impl std::convert::From<HashMap<String, Value>> for Value {
-    fn from(v: HashMap<String, Value>) -> Value {
-        Value::Obj(Json::from_map(v))
+impl std::convert::From<HashMap<String, Val>> for Val {
+    fn from(v: HashMap<String, Val>) -> Val {
+        Val::Obj(Obj::from_map(v))
     }
 }
 
-impl std::convert::From<Json> for Value {
-    fn from(v: Json) -> Value {
-        Value::Obj(v)
+impl std::convert::From<Obj> for Val {
+    fn from(v: Obj) -> Val {
+        Val::Obj(v)
     }
 }
 
-impl std::convert::From<bool> for Value {
-    fn from(v: bool) -> Value {
-        Value::Bool(v)
+impl std::convert::From<bool> for Val {
+    fn from(v: bool) -> Val {
+        Val::Bool(v)
     }
 }
 
@@ -42,9 +42,9 @@ macro_rules! impl_from_num {
 ($($type:ident),*) => (
    $(
 
-       impl std::convert::From<$type> for Value {
-           fn from(v: $type) -> Value {
-               Value::Num(v.to_f64().unwrap())
+       impl std::convert::From<$type> for Val {
+           fn from(v: $type) -> Val {
+               Val::Num(v.to_f64().unwrap())
             }
         }
     )*

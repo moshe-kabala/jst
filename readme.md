@@ -11,13 +11,13 @@ The package includes:
 # Convertors and Macros
 
 ## Macros
-The package support json!, value!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntex and getting complision error). 
+The package support obj!, val!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntex and getting complision error). 
 
 ### Json macro
 ```
     let key = "var_key";
 
-    let person = json! {
+    let person = obj! {
         name: "jhon",
         like_rust: true,
         like_go: null,
@@ -36,17 +36,17 @@ The package support json!, value!, and array! macros to write any json object in
 ```
 
 ### value macro
-Create json::Value enum from any valid json format
+Create json::Val enum from any valid json format
 ```
 
-let str = value!("some string");
-let num = value!(45);
-let bool = value!(true);
-let null = value!(null);
-let array = value!(["string", 45]);
+let str = val!("some string");
+let num = val!(45);
+let bool = val!(true);
+let null = val!(null);
+let array = val!(["string", 45]);
 
 
-let json = value!({
+let json = val!({
   key:"string", 
   num:45
 });
@@ -54,36 +54,36 @@ let json = value!({
 ```
 
 ### array macro
-Create a Vec\<json::Value\> vector.
+Create a Vec\<json::Val\> vector.
 ```
-// the type is Vec<Value>
+// the type is Vec<Val>
 let array2 = array!["string", 45, true, [], {key: "value"}];
 ```
 ## Convertors
-Form any numerical number, String, &str, boolean and HashMap<String, json::Value> you can call 'into()' method to convert the value to Json Value enum
+Form any numerical number, String, &str, boolean and HashMap<String, json::Val> you can call 'into()' method to convert the value to Obj::Val enum
 
 ```
-let str:Value = "some string".into();
-let num:Value = 78.into();
-let bool:Value = true.into();
-let array:Value = vec!["string".into(), 45.into()];
+let str:Val = "some string".into();
+let num:Val = 78.into();
+let bool:Val = true.into();
+let array:Val = vec!["string".into(), 45.into()];
 
-// the short way is to use macros (json!, value! and array!)
+// the short way is to use macros (obj!, val! and array!)
 
-let str = value!("some string");
-let num = value!(54);
-let bool = value!(true);
-let null = value!(null);
-let array = value!(["string", 45]);
-// the type is Vec<Value>
-let array2 = array!["string", 45];
+let str = val!("some string");
+let num = val!(54);
+let bool = val!(true);
+let null = val!(null);
+let array_val = val!(["string", 45]);
+// the type is Vec<Val>
+let array = array!["string", 45];
 
-let json = value!({
+let obj_val = val!({
   key:"string", 
   num:45
 });
-// the type is Json
-let json2 = json!{
+// the type is Object
+let obj = obj!{
   key:"string", 
   num:45
 };
@@ -95,13 +95,13 @@ let json2 = json!{
 # Parser
 Parse a json from a string 
 ```
-use json::{Value, Json};
+use json::{Val, Json};
 
 fn main() {
 
-  let mut j = Json::new();
+  let mut j = Obj::new();
 
-  let from_string = Json::from(
+  let from_string = Obj::from(
     r#"{
       "number": 56,
       "string": "some string\" string",
@@ -131,7 +131,7 @@ fn main() {
 
 
   // Print either json or err
-  if let Ok(Value::Obj(v)) = from_string {
+  if let Ok(Val::Obj(v)) = from_string {
     println!("{:?}", v);
   } else if let Err(e) = from_string {
     println!("{:?}", e)
@@ -140,10 +140,10 @@ fn main() {
 ```
 
 ```
-let val = Value::from("[3, 5, null]");
+let val = Val::from("[3, 5, null]");
 
 if let Ok(v) = val) {
-  assert_eq!(v, Value::Array(vec![Value::Num(3.0), Value::Num(5.0), Value::Null])) // true
+  assert_eq!(v, Val::Array(vec![Val::Num(3.0), Val::Num(5.0), Val::Null])) // true
 }
 ```
 
@@ -155,8 +155,9 @@ The code not ready for production. if you looking for a json library take a look
 1. Improve parser tests
 2. Improve indexer (enable to set a value by index)
 3. Adding Error code
-4. Adding more tests for json, array and value macros
-5. Adding json-schema validator
+4. Serialize and Deserialize
+5. macro for destructuring object and array 
+6. Adding json-schema validator
 
 
 # Licence

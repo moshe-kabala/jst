@@ -1,80 +1,81 @@
 use std::{self, fmt, ops::Index};
 
-use crate::{Json, Parser, ParserErr};
+use crate::{Obj, Parser, ParserErr};
 
 #[derive(PartialEq)]
-pub enum Value {
+pub enum Val {
     Str(String),
-    Obj(Json),
+    Obj(Obj),
     Num(f64),
-    Array(Vec<Value>),
+    Array(Vec<Val>),
     Bool(bool),
     Null,
+    Undefined
 }
 
-impl Index<&str> for Value {
-    type Output = Value;
+impl Index<&str> for Val {
+    type Output = Val;
 
-    fn index(&self, key: &str) -> &Value {
+    fn index(&self, key: &str) -> &Val {
         match self {
-            Value::Obj(obj) => obj.index(key),
-            _ => &Value::Null,
+            Val::Obj(obj) => obj.index(key),
+            _ => &Val::Undefined,
         }
     }
 }
 
-impl Index<usize> for Value {
-    type Output = Value;
+impl Index<usize> for Val {
+    type Output = Val;
 
-    fn index(&self, key: usize) -> &Value {
+    fn index(&self, key: usize) -> &Val {
         match self {
-            Value::Array(a) => &a[key],
-            _ => &Value::Null,
+            Val::Array(a) => &a[key],
+            _ => &Val::Undefined,
         }
     }
 }
 
 // todo adding range index
-// impl Index<Range<usize>> for Value {
-//     type Output = Value;
+// impl Index<Range<usize>> for Val {
+//     type Output = Val;
 
 //     fn index(&self, key: Range<usize>) -> &Self::Output {
 //         // todo
-//         //Value::Array(a) => &Value::Array(Vec::from(&a[key])),
+//         //Val::Array(a) => &Val::Array(Vec::from(&a[key])),
 //         match self {
-//             Value::Str(s) => &Value::Str(s[key].into()),
-//             _ => &Value::Null,
+//             Val::Str(s) => &Val::Str(s[key].into()),
+//             _ => &Val::Null,
 //         }
 //     }
 // }
 
-impl Value {
-    pub fn parse(str: &str) -> Result<Value, ParserErr> {
+impl Val {
+    pub fn parse(str: &str) -> Result<Val, ParserErr> {
         let mut parser = Parser::new(str);
         parser.parse(true)
     }
 }
 
-impl fmt::Display for Value {
+impl fmt::Display for Val {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-impl fmt::Debug for Value {
+impl fmt::Debug for Val {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let val: String = match self {
-            Value::Bool(v) => {
+            Val::Bool(v) => {
                 if *v {
                     "true".into()
                 } else {
                     "false".into()
                 }
             }
-            Value::Num(v) => format!("{}", v),
-            Value::Obj(v) => format!("{:?}", v),
-            Value::Str(v) => format!("{:?}", v),
-            Value::Array(v) => {
+            Val::Num(v) => format!("{}", v),
+            Val::Obj(v) => format!("{:?}", v),
+            Val::Str(v) => format!("{:?}", v),
+            Val::Array(v) => {
                 if v.len() == 0 {
                     String::from("[]")
                 } else {
@@ -95,7 +96,8 @@ impl fmt::Debug for Value {
                     format!("[\n{}\n]", lines)
                 }
             }
-            Value::Null => "null".into(),
+            Val::Null => "null".into(),
+            Val::Undefined => "".into(),
         };
 
         write!(f, "{}", val)

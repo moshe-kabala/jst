@@ -12,13 +12,30 @@
                 "args": [
                     "test",
                     "--no-run",
-                    "--nocapture",
                     "--lib",
                     "--package=json"
                 ],
                 "filter": {
                     "name": "json",
                     "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug library 'json'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=json",
+                    "--package=json"
+                ],
+                "filter": {
+                    "name": "json",
+                    "kind": "bin"
                 }
             },
             "args": [],

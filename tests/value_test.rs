@@ -1,35 +1,35 @@
-#[macro_use(json, value, array)]
+#[macro_use(obj, val, array)]
 extern crate json;
 
-use json::{Json, Value};
+use json::{Obj, Val};
 
 #[test]
 fn test_value_macro() {
-    let _str = value!("some string");
-    let _num = value!(54);
-    let _bool = value!(true);
-    let _null = value!(null);
-    let _array = value!(["string", 45]);
+  let _str = val!("some string");
+  let _num = val!(54);
+  let _bool = val!(true);
+  let _null = val!(null);
+  let _array = val!(["string", 45]);
 
-    let _json = value!({
+  let _json = val!({
+    key:"string",
+    num:45
+  });
+
+  //todo
+  // let empty_json = val!({});
+  // let empty_array = val!([]);
+
+  assert_eq!(_str, Val::Str("some string".into()));
+  assert_eq!(_num, Val::Num(54.0));
+  assert_eq!(_bool, Val::Bool(true));
+  assert_eq!(_null, Val::Null);
+  assert_eq!(_array, Val::Array(vec![val!("string"), val!(45)]));
+  assert_eq!(
+    _json,
+    Val::Obj(obj! {
       key:"string",
       num:45
-    });
-
-    //todo
-    // let empty_json = value!({});
-    // let empty_array = value!([]);
-
-    assert_eq!(_str, Value::Str("some string".into()));
-    assert_eq!(_num, Value::Num(54.0));
-    assert_eq!(_bool, Value::Bool(true));
-    assert_eq!(_null, Value::Null);
-    assert_eq!(_array, Value::Array(vec![value!("string"), value!(45)]));
-    assert_eq!(
-        _json,
-        Value::Obj(json! {
-          key:"string",
-          num:45
-        })
-    );
+    })
+  );
 }
