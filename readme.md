@@ -1,6 +1,6 @@
 # Json
 
-The package includes some functionalities to  serializing and deserializing json with rust
+The package includes:
 
 1. Json data structure
 2. Json parser
