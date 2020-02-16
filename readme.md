@@ -57,7 +57,7 @@ fn main() {
 let val = Value::from("[3, 5, null]");
 
 if let Ok(v) = val) {
-  assert_eq!(v, Value::Array(vec![Value::Num(3.0), Value::Num(3.0), Value::Null])) // true
+  assert_eq!(v, Value::Array(vec![Value::Num(3.0), Value::Num(5.0), Value::Null])) // true
 }
 ```
 
