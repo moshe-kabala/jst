@@ -86,10 +86,10 @@ let arr = array![
 
 
 // Extend the arr2 by ...arr
-let arr2 = [
+let arr2 = array![
   ...arr,
   "val"
-]
+];
 
 ```
 ## Convertors
