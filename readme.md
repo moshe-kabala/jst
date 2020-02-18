@@ -191,6 +191,8 @@ The code not ready for production. if you looking for a json library take a look
 4. Serialize and Deserialize
 5. macro for destructuring object and array 
 6. Adding json-schema validator
+7. Support yml format
+8. Option to use share pointer for object and array
 
 
 # Licence

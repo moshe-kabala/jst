@@ -64,11 +64,41 @@ impl Index<usize> for Val {
 //     }
 // }
 
+macro_rules! impl_unwrap_and_getter {
+
+
+
+    ( $(($type:ty, $ty_name:ident, $mc:pat, $var:ident, $unwrap:ident, $unwrap_or:ident)),*) => (
+        $(
+            pub fn $unwrap(self)-> $type {
+                match self {
+                    $mc => $var,
+                    _ => panic!("[Val.get_{}] val: {:?} is not a str", self, stringify!($ty_name))
+                }
+            }
+            pub fn $unwrap_or(self, def: $type)-> $type {
+                match self {
+                    $mc => $var,
+                    _ => def
+                }
+            }
+        )*
+    )
+}
+
 impl Val {
     pub fn parse(str: &str) -> Result<Val, ParserErr> {
         let mut parser = Parser::new(str);
         parser.parse(true)
     }
+    
+    impl_unwrap_and_getter!(
+        (String, str, Val::Str(v), v, unwrap_str, unwrap_str_or),
+        (f64, num, Val::Num(v), v, unwrap_num, unwrap_num_or),
+        (bool, bool, Val::Bool(v), v, unwrap_bool, unwrap_bool_or),
+        (Vec<Val>, arr, Val::Array(v), v, unwrap_arr, unwrap_arr_or),
+        (Obj, obj, Val::Obj(v), v, unwrap_obj, unwrap_obj_or)
+    );
 }
 
 impl fmt::Display for Val {
