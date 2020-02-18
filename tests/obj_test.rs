@@ -1,4 +1,4 @@
-#[macro_use(obj, val, array)]
+#[macro_use(obj, val, arr)]
 extern crate json;
 
 use json::{Obj, Val};
@@ -10,11 +10,11 @@ fn test_json_macro() {
 
     let key_only = "not put the value";
 
-    let mut some_object = obj! {
+    let some_object = obj! {
         some_object_flatten_key: "value"
     };
 
-    let lastFlatFromObj = obj! {
+    let last_flat_from_obj = obj! {
         last_flat_key: "value"
     };
 
@@ -53,7 +53,7 @@ fn test_json_macro() {
                     key: "value"
                 }
             },
-            ...lastFlatFromObj
+            ...last_flat_from_obj
         },
         // flat from expression
         ...some_object,

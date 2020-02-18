@@ -39,6 +39,28 @@ impl Index<&str> for Val {
     }
 }
 
+pub fn array_to_str(arr: &Vec<Val>) -> String {
+    if arr.len() == 0 {
+        "[]".into()
+    } else {
+        // map the array values
+        // join the values with ,\n
+        // split into lines
+        // add an indentation for each line
+        // join and collect the result
+        let lines = arr
+            .iter()
+            .map(|item| format!("{:?}", item))
+            .collect::<Vec<String>>()
+            .join(",\n")
+            .split("\n")
+            .map(|line| format!("    {}", line))
+            .collect::<Vec<String>>()
+            .join("\n");
+        lines
+    }
+}
+
 impl Index<usize> for Val {
     type Output = Val;
 
@@ -91,7 +113,7 @@ impl Val {
         let mut parser = Parser::new(str);
         parser.parse(true)
     }
-    
+
     impl_unwrap_and_getter!(
         (String, str, Val::Str(v), v, unwrap_str, unwrap_str_or),
         (f64, num, Val::Num(v), v, unwrap_num, unwrap_num_or),
@@ -120,27 +142,7 @@ impl fmt::Debug for Val {
             Val::Num(v) => format!("{}", v),
             Val::Obj(v) => format!("{:?}", v),
             Val::Str(v) => format!("{:?}", v),
-            Val::Array(v) => {
-                if v.len() == 0 {
-                    String::from("[]")
-                } else {
-                    // map the array values
-                    // join the values with ,\n
-                    // split into lines
-                    // add an indentation for each line
-                    // join and collect the result
-                    let lines = v
-                        .iter()
-                        .map(|item| format!("{:?}", item))
-                        .collect::<Vec<String>>()
-                        .join(",\n")
-                        .split("\n")
-                        .map(|line| format!("    {}", line))
-                        .collect::<Vec<String>>()
-                        .join("\n");
-                    format!("[\n{}\n]", lines)
-                }
-            }
+            Val::Array(v) => array_to_str(v),
             Val::Null => "null".into(),
             Val::Undef => "undefined".into(),
         };

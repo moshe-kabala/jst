@@ -112,7 +112,7 @@ macro_rules! val {
 }
 
 #[macro_export(json_macros)]
-macro_rules! array {
+macro_rules! arr {
     // empty array
     [] => (
         {

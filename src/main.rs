@@ -1,4 +1,4 @@
-#[macro_use(obj, val, array)]
+#[macro_use(obj, val, arr)]
 extern crate json;
 
 use json::{Obj, Val};
@@ -61,4 +61,6 @@ fn main() {
     ];
 
     println!("{}", person);
+    println!("{}", val!(array));
+
 }
