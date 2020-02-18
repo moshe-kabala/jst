@@ -12,11 +12,14 @@ fn test_array_macro() {
         {key: "value"},
         5,
         [],
+        ...[23, "some val"],
+        ...array![45,43],
         {nested: {key: "value"}},
         "some value",
         // nested array
-        [[["val"], "val"],[]],
-        null
+        [[["val"], "val"],[], null],
+        null,
+        ...["some string",[]]
     ];
 
     let empty_array = array![];
@@ -30,10 +33,21 @@ fn test_array_macro() {
             val!({key: "value"}),
             5.into(),
             vec![].into(),
+            val!(23), 
+            val!("some val"),
+            val!(45),
+            val!(43),
             val!({nested: {key: "value"}}),
             "some value".into(),
-            vec![vec![vec!["val".into()].into(), "val".into()].into(), vec![].into()].into(),
-            val!(null)
+            vec![
+                vec![vec!["val".into()].into(), "val".into()].into(),
+                vec![].into(),
+                Val::Null
+            ]
+            .into(),
+            val!(null),
+            "some string".into(),
+            vec![].into()
         ]
     );
     let expected_empty_array: Vec<Val> = vec![];

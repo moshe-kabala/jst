@@ -39,5 +39,26 @@ fn main() {
         [key]: "var_key",
         age: 56
     };
+
+    let arr = array![45];
+
+    let array = array![
+        // "some@gmail.com",
+        // 45,
+        // ["value", 5],
+        // {key: "value"},
+        5,
+        [],
+        ...[23, "some val"],
+        ...["sdfsf"],
+        ...arr,
+        {nested: {key: "value"}},
+        "some value",
+        // nested array
+        [[["val"], "val"],[]],
+        null,
+        ...["some string"]
+    ];
+
     println!("{}", person);
 }

@@ -8,10 +8,22 @@ fn test_json_macro() {
     let key = "var_key";
     let var_value = "var_val";
 
+    let key_only = "not put the value";
+
+    let mut some_object = obj! {
+        some_object_flatten_key: "value"
+    };
+
+    let lastFlatFromObj = obj! {
+        last_flat_key: "value"
+    };
+
     let person = obj! {
         name: "jhon",
         like_rust: true,
         like_go: null,
+        // put only the variable name instead 'key_only: key_only'
+        key_only,
         emails : [
             "some@gmail.com",
             "some2@gmail.com"
@@ -32,11 +44,25 @@ fn test_json_macro() {
         from_macro: val!("from_macro string"),
         from_value_var: Val::Str("from_value_var string".into()),
         empty_obj: {},
+        // Like javascript you can flat obj into anther
+        // NOTE the object is CLONE into
+        ...{
+            flat_key: "value",
+            nested_flat_into: {
+                nested2: {
+                    key: "value"
+                }
+            },
+            ...lastFlatFromObj
+        },
+        // flat from expression
+        ...some_object,
         empty_array: [],
         bool: true,
         "literal": true,
         [key]: "var_key",
-        age: 56
+        age: 56,
+        ...{last_flat: "value"}
     };
 
     let empty_obj = obj! {};
@@ -50,6 +76,7 @@ fn test_json_macro() {
     assert_eq!(person["like_rust"], val!(true));
     assert_eq!(person["var_key"], val!("var_key"), "person is {:?}", person);
     assert_eq!(person["literal"], val!(true));
+    assert_eq!(person["key_only"], val!("not put the value"));
     assert_eq!(person["age"], val!(56));
     assert_eq!(
         person["emails"],
@@ -64,6 +91,12 @@ fn test_json_macro() {
         "person is {:?}",
         person
     );
+
+    assert_eq!(person["flat_key"], val!("value"));
+    assert_eq!(person["nested_flat_into"]["nested2"]["key"], val!("value"));
+    assert_eq!(person["some_object_flatten_key"], val!("value"));
+
+    assert_eq!(person["last_flat_key"], val!("value"));
 
     assert_eq!(empty_obj, Obj::new());
 }

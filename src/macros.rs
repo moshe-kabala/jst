@@ -3,31 +3,31 @@
 ///
 /// ## Value Macro
 /// Create json::Val enum from any valid json format
-/// 
+///
 /// ### examples
 // / ```
 // / #[macro_use(val, obj, array)]
 // / extern crate json;
-// / 
+// /
 // / use json::{Val, Obj};
-// / 
+// /
 // / let str = val!("some string");
 // / let num = val!(45);
 // / let bool = val!(true);
 // / let null = val!(null);
 // / let array = val!([
-// /     "string", 
+// /     "string",
 // /     45,
 // /     null,
 // /     [{key: "val"}, undefined]
 // / ]);
-// / 
+// /
 // / let json = val!({
-// /   key:"string", 
+// /   key:"string",
 // /   num:45
 // / });
 // / ```
-/// 
+///
 #[macro_export(json_macros)]
 macro_rules! val {
     ([]) => (Val::Array(array![]));
@@ -60,7 +60,6 @@ macro_rules! val {
     //          key:v
     //     }
     (@next ({$($val:tt)*}) ($($next:tt)+) ($($args:tt)+)) => (
-        println!("next_e {}", stringify!({$($val)*}));
         $($next)*($($args)* ({$($val)*}));
     );
     //handle with array value
@@ -107,6 +106,9 @@ macro_rules! val {
         $($next)*($($args)* ($val));
     );
 
+
+
+
 }
 
 #[macro_export(json_macros)]
@@ -126,7 +128,7 @@ macro_rules! array {
 
     (@push_and_continue $array:ident  ($($val:tt)+) ($($rest:tt)+)) => (
         array!(@push $array ($($val)*));
-        array!(@next_value $array ($($rest)*));
+        array!(@flat_expr_or_continue $array ($($rest)*));
     );
 
     // not continue (there is no rest)
@@ -135,17 +137,45 @@ macro_rules! array {
     );
 
 
-     (@next_value $array:ident ($($rest:tt)*))=> (
+    (@next_value $array:ident ($($rest:tt)*))=> (
         val!(@next ($($rest)*) (array!) (@push_and_continue $array ));
-     );
+    );
 
-     [$($tt:tt)*] => (
-         {
+
+    // catch ...[], and rest
+    (@flat_expr_or_continue $array:ident (...[$($val:tt)*], $($rest:tt)*)) => (
+        $array.extend(array![$($val)*].clone());
+        array!(@flat_expr_or_continue $array ($($rest)*));
+    );
+
+    // catch ...[]
+    (@flat_expr_or_continue $array:ident (...[$($val:tt)*])) => (
+        $array.extend(array![$($val)*].clone());
+    );
+
+     // catch ...expr, and rest
+    (@flat_expr_or_continue $array:ident (...$val:expr , $($rest:tt)*))=> (
+        $array.extend($val.clone());
+        array!(@flat_expr_or_continue $array ($($rest)*));
+    );
+
+    // catch ...expr
+    (@flat_expr_or_continue $array:ident (...$val:expr)) => (
+        $array.extend($val.clone());
+    );
+
+    // there is no flat expression, so continue
+    (@flat_expr_or_continue $array:ident ($($rest:tt)*)) => (
+        array!(@next_value $array ($($rest)*));
+    );
+
+    [$($tt:tt)*] => (
+        {
              let mut array: Vec<Val>= Vec::new();
-             array!(@next_value array ($($tt)*));
+             array!(@flat_expr_or_continue array ($($tt)*));
              array
-            }
-        );
+        }
+    );
 }
 
 #[macro_export(json_macros)]
@@ -167,18 +197,14 @@ macro_rules! obj{
         $key.into()
     );
 
-
-
-
     // set
     (@set $json:ident ($($key:tt)+) ($($val:tt)+)) => (
         $json.set(obj!(@key $($key)*), val!($($val)*));
     );
 
-
     (@set_and_continue $json:ident ($($key:tt)+) ($($val:tt)+) ($($rest:tt)+)) => (
         obj!(@set $json ($($key)*)  ($($val)*));
-        obj!(@next_key $json ($($rest)*));
+        obj!(@flat_expr_or_continue $json ($($rest)*));
     );
 
     // not continue (there is no rest)
@@ -189,6 +215,22 @@ macro_rules! obj{
      //
     (@next_value $json:ident ($($key:tt)+) ($($rest:tt)+)) => (
         val!(@next ($($rest)*) (obj!) (@set_and_continue $json ($($key)*)));
+    );
+
+    // handle with key without value
+    // let name = "some key";
+    // let age = 45;
+    // {
+    //    key,
+    //    age
+    // }
+    //
+    (@next_key $json:ident ($key:ident, $($rest:tt)+)) => (
+        obj!(@next_value $json ($key) ($key,$($rest)*));
+    );
+
+    (@next_key $json:ident ($key:ident)) => (
+        obj!(@next_value $json ($key) ($key));
     );
 
     (@next_key $json:ident ($key:literal: $($rest:tt)+)) => (
@@ -204,11 +246,39 @@ macro_rules! obj{
     );
 
 
+    // catch ...{}, and rest
+    (@flat_expr_or_continue $json:ident (...{$($val:tt)*}, $($rest:tt)*)) => (
+        $json.extend(obj!{$($val)*}.clone().into_iter());
+        obj!(@flat_expr_or_continue $json ($($rest)*));
+    );
+
+    // catch ...{}
+    (@flat_expr_or_continue $json:ident (...{$($val:tt)*})) => (
+        $json.extend(obj!{$($val)*}.clone().into_iter());
+    );
+
+    // catch ...expr, and rest
+    (@flat_expr_or_continue $json:ident (...$val:expr , $($rest:tt)*))=> (
+        $json.extend($val.clone().into_iter());
+        obj!(@flat_expr_or_continue $json ($($rest)*));
+    );
+
+    // catch ...expr
+    (@flat_expr_or_continue $json:ident (...$val:expr)) => (
+        $json.extend($val.clone().into_iter());
+    );
+
+    // there is no flat expression, so continue
+    (@flat_expr_or_continue $json:ident ($($rest:tt)*)) => (
+        obj!(@next_key $json ($($rest)*));
+    );
+
+
    // first station
    {$($tt:tt)*} => (
      {
          let mut j = Obj::new();
-         obj!(@next_key j ($($tt)*));
+         obj!(@flat_expr_or_continue j ($($tt)*));
          j
      }
     );

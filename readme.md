@@ -11,20 +11,40 @@ The package includes:
 # Convertors and Macros
 
 ## Macros
-The package support obj!, val!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntex and getting complision error). 
+The package support obj!, val!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntax and getting completion error). 
 
 ### Json macro
 ```
+    // basic usage
+
+    let dog = obj! {
+      color: "brown",
+      type: "Akbash",
+      eating : [
+        "WholeHearted",
+        "Royal Canin"
+      ]
+    };
+
+    // advance usage
+
     let key = "var_key";
+    let age = 45;
+    let like_banana = true;
 
     let person = obj! {
         name: "jhon",
+        // use value name as a key
+        age,
+        like_banana,
         like_rust: true,
         like_go: null,
         emails : [
             "some@gmail.com",
             "some2@gmail.com"
         ],
+        // you can flat obj into - the dog is copy not moved 
+        ...dog
         address: {
             city: "somewhere",
             zip: 5612
@@ -56,7 +76,21 @@ let json = val!({
 Create a Vec\<json::Val\> vector.
 ```
 // the type is Vec<Val>
-let array2 = array!["string", 45, true, [], {key: "value"}];
+let arr = array![
+  "string", 
+  45, 
+  true, 
+  [], 
+  {key: "value"}
+];
+
+
+// Extend the arr2 by ...arr
+let arr2 = [
+  ...arr,
+  "val"
+]
+
 ```
 ## Convertors
 Form any numerical number, String, &str, boolean and HashMap<String, json::Val> you can call 'into()' method to convert the value to Obj::Val enum

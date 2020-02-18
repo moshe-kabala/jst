@@ -6,18 +6,18 @@ use crate::{Obj, Parser, ParserErr};
 /// The Val enum wrap the values to make the code
 /// more readable for example
 /// let obj = val! {
-/// 
+///
 /// }
-/// 
+///
 /// let result = obj["some key"]["anther key"][2]
-/// 
+///
 /// even th
-/// 
-/// 
-/// 
-/// 
-/// 
-#[derive(PartialEq)]
+///
+///
+///
+///
+///
+#[derive(PartialEq, Clone)]
 pub enum Val {
     Str(String),
     Obj(Obj),

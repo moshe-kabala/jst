@@ -2,7 +2,7 @@ use std::{self, collections::HashMap, fmt, ops::Index};
 
 use crate::{Parser, ParserErr, Val};
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct Obj(HashMap<String, Val>);
 
 impl Index<&str> for Obj {
@@ -13,7 +13,7 @@ impl Index<&str> for Obj {
         if let Some(v) = r {
             v
         } else {
-            &Val::Null
+            &Val::Undef
         }
     }
 }
@@ -67,9 +67,26 @@ impl Obj {
     }
 }
 
+impl IntoIterator for Obj {
+    type Item = (String, Val);
+    type IntoIter = <HashMap<String, Val> as IntoIterator>::IntoIter;
+
+    #[inline]
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
+
 impl fmt::Display for Obj {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+
+impl Extend<(String, Val)> for Obj {
+    fn extend<T: IntoIterator<Item = (String, Val)>>(&mut self, iter: T) {
+        self.0.extend(iter)
     }
 }
 
