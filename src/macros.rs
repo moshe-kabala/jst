@@ -30,9 +30,9 @@
 ///
 #[macro_export(json_macros)]
 macro_rules! val {
-    ([]) => (Val::Array(array![]));
+    ([]) => (Val::Array(arr![]));
     ({}) => (Val::Obj(obj!{}));
-    ([$($tt:tt)*]) => (Val::Array(array![$($tt)*]));
+    ([$($tt:tt)*]) => (Val::Array(arr![$($tt)*]));
     (null) => (Val::Null);
     (undefined) => (Val::Undef);
     ({$($tt:tt)*}) => (Val::Obj(obj!{$($tt)*}));
@@ -127,36 +127,36 @@ macro_rules! array {
 
 
     (@push_and_continue $array:ident  ($($val:tt)+) ($($rest:tt)+)) => (
-        array!(@push $array ($($val)*));
-        array!(@flat_expr_or_continue $array ($($rest)*));
+        arr!(@push $array ($($val)*));
+        arr!(@flat_expr_or_continue $array ($($rest)*));
     );
 
     // not continue (there is no rest)
     (@push_and_continue $array:ident  ($($val:tt)+)) => (
-        array!(@push $array  ($($val)*));
+        arr!(@push $array  ($($val)*));
     );
 
 
     (@next_value $array:ident ($($rest:tt)*))=> (
-        val!(@next ($($rest)*) (array!) (@push_and_continue $array ));
+        val!(@next ($($rest)*) (arr!) (@push_and_continue $array ));
     );
 
 
     // catch ...[], and rest
     (@flat_expr_or_continue $array:ident (...[$($val:tt)*], $($rest:tt)*)) => (
-        $array.extend(array![$($val)*].clone());
-        array!(@flat_expr_or_continue $array ($($rest)*));
+        $array.extend(arr![$($val)*].clone());
+        arr!(@flat_expr_or_continue $array ($($rest)*));
     );
 
     // catch ...[]
     (@flat_expr_or_continue $array:ident (...[$($val:tt)*])) => (
-        $array.extend(array![$($val)*].clone());
+        $array.extend(arr![$($val)*].clone());
     );
 
      // catch ...expr, and rest
     (@flat_expr_or_continue $array:ident (...$val:expr , $($rest:tt)*))=> (
         $array.extend($val.clone());
-        array!(@flat_expr_or_continue $array ($($rest)*));
+        arr!(@flat_expr_or_continue $array ($($rest)*));
     );
 
     // catch ...expr
@@ -166,13 +166,13 @@ macro_rules! array {
 
     // there is no flat expression, so continue
     (@flat_expr_or_continue $array:ident ($($rest:tt)*)) => (
-        array!(@next_value $array ($($rest)*));
+        arr!(@next_value $array ($($rest)*));
     );
 
     [$($tt:tt)*] => (
         {
              let mut array: Vec<Val>= Vec::new();
-             array!(@flat_expr_or_continue array ($($tt)*));
+             arr!(@flat_expr_or_continue array ($($tt)*));
              array
         }
     );

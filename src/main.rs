@@ -40,9 +40,9 @@ fn main() {
         age: 56
     };
 
-    let arr = array![45];
+    let arr = arr![45];
 
-    let array = array![
+    let array = arr![
         // "some@gmail.com",
         // 45,
         // ["value", 5],

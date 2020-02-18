@@ -7,13 +7,14 @@ The package includes:
 3. JSON to string
 4. Macros to writing JSON same as a Javascript object
 
-
 # Convertors and Macros
 
 ## Macros
-The package support obj!, val!, and array! macros to write any json object in much more convinces way ( Write like JavaScript Object syntax and getting completion error). 
+
+The package support obj!, val!, and arr! macros to write any json object in much more convinces way ( Write like JavaScript Object syntax and getting completion error).
 
 ### Json macro
+
 ```
     // basic usage
 
@@ -43,7 +44,7 @@ The package support obj!, val!, and array! macros to write any json object in mu
             "some@gmail.com",
             "some2@gmail.com"
         ],
-        // you can flat obj into - the dog is copy not moved 
+        // you can flat obj into - the dog is copy not moved
         ...dog
         address: {
             city: "somewhere",
@@ -56,7 +57,9 @@ The package support obj!, val!, and array! macros to write any json object in mu
 ```
 
 ### value macro
+
 Create json::Val enum from any valid json format
+
 ```
 
 let str = val!("some string");
@@ -66,33 +69,37 @@ let null = val!(null);
 let array = val!(["string", 45]);
 
 let json = val!({
-  key:"string", 
+  key:"string",
   num:45
 });
 
 ```
 
 ### array macro
+
 Create a Vec\<json::Val\> vector.
+
 ```
 // the type is Vec<Val>
-let arr = array![
-  "string", 
-  45, 
-  true, 
-  [], 
+let arr = arr![
+  "string",
+  45,
+  true,
+  [],
   {key: "value"}
 ];
 
 
 // Extend the arr2 by ...arr
-let arr2 = array![
+let arr2 = arr![
   ...arr,
   "val"
 ];
 
 ```
+
 ## Convertors
+
 Form any numerical number, String, &str, boolean and HashMap<String, json::Val> you can call 'into()' method to convert the value to Obj::Val enum
 
 ```
@@ -101,7 +108,7 @@ let num:Val = 78.into();
 let bool:Val = true.into();
 let array:Val = vec!["string".into(), 45.into()];
 
-// the short way is to use macros (obj!, val! and array!)
+// the short way is to use macros (obj!, val! and arr!)
 
 let str = val!("some string");
 let num = val!(54);
@@ -109,24 +116,25 @@ let bool = val!(true);
 let null = val!(null);
 let array_val = val!(["string", 45]);
 // the type is Vec<Val>
-let array = array!["string", 45];
+let array = arr!["string", 45];
 
 let obj_val = val!({
-  key:"string", 
+  key:"string",
   num:45
 });
 // the type is Object
 let obj = obj!{
-  key:"string", 
+  key:"string",
   num:45
 };
 
 
 ```
 
-
 # Parser
-Parse a json from a string 
+
+Parse a json from a string
+
 ```
 use json::{Val, Json};
 
@@ -181,6 +189,7 @@ if let Ok(v) = val) {
 ```
 
 # Deceleration
+
 The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
 
 ## Todo
@@ -189,11 +198,11 @@ The code not ready for production. if you looking for a json library take a look
 2. Improve indexer (enable to set a value by index)
 3. Adding Error code
 4. Serialize and Deserialize
-5. macro for destructuring object and array 
+5. macro for destructuring object and array
 6. Adding json-schema validator
 7. Support yml format
 8. Option to use share pointer for object and array
 
-
 # Licence
+
 MIT

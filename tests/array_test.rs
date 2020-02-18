@@ -5,7 +5,7 @@ use json::{Obj, Val};
 
 #[test]
 fn test_array_macro() {
-    let array = array![
+    let array = arr![
         "some@gmail.com",
         45,
         ["value", 5],
@@ -13,7 +13,7 @@ fn test_array_macro() {
         5,
         [],
         ...[23, "some val"],
-        ...array![45,43],
+        ...arr![45,43],
         {nested: {key: "value"}},
         "some value",
         // nested array
@@ -22,7 +22,7 @@ fn test_array_macro() {
         ...["some string",[]]
     ];
 
-    let empty_array = array![];
+    let empty_array = arr![];
 
     assert_eq!(
         array,
@@ -33,7 +33,7 @@ fn test_array_macro() {
             val!({key: "value"}),
             5.into(),
             vec![].into(),
-            val!(23), 
+            val!(23),
             val!("some val"),
             val!(45),
             val!(43),
