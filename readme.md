@@ -187,10 +187,8 @@ if let Ok(v) = val) {
   assert_eq!(v, Val::Array(vec![Val::Num(3.0), Val::Num(5.0), Val::Null])) // true
 }
 ```
-
-# Deceleration
-
-The code not ready for production. if you looking for a json library take a look at [Serde Json](https://github.com/serde-rs/json)
+## Contribute
+Any donation is welcome, open Issues, PR and request for new features.
 
 ## Todo
 
