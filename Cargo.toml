@@ -4,8 +4,12 @@ version = "0.0.1"
 authors = ["moshe.kabala@gmail.com <31233967+moshe-kabala@users.noreply.github.com>"]
 edition = "2018"
 license = "MIT"
-readme = "readme.md"
+readme = "README.md"
 description = "Write a javascript object in rust"
+repository = "https://github.com/moshe-kabala/jst"
+categories = [ "parser-implementations", "web-programming", "encoding"]
+include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE"]
+keywords = ["json", "javascript", "parser", "jst", "json-schema"]
 
 [dependencies]
 num = "0.2.1"
