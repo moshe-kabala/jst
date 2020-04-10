@@ -1,4 +1,4 @@
-
+#![recursion_limit = "512"]
 
 extern crate num;
 

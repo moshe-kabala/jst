@@ -202,6 +202,7 @@ The code not ready for production. if you looking for a json library take a look
 6. Adding json-schema validator
 7. Support yml format
 8. Option to use share pointer for object and array
+9. Consider using the indexmap crate instead of HeadMap (for keeping insert order)
 
 # Licence
 

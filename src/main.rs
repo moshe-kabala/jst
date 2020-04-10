@@ -1,12 +1,13 @@
+#![recursion_limit = "500"]
 #[macro_use(obj, val, arr)]
-extern crate json;
-
-use json::{Obj, Val};
+extern crate jst;
+use jst::{Obj, Val};
 
 // playground
 fn main() {
     let key = "var_key";
     let var_value = "var_val";
+
 
     let person = obj! {
         name: "jhon",
@@ -40,27 +41,27 @@ fn main() {
         age: 56
     };
 
-    let arr = arr![45];
+    // let arr = arr![45];
 
-    let array = arr![
-        // "some@gmail.com",
-        // 45,
-        // ["value", 5],
-        // {key: "value"},
-        5,
-        [],
-        ...[23, "some val"],
-        ...["sdfsf"],
-        ...arr,
-        {nested: {key: "value"}},
-        "some value",
-        // nested array
-        [[["val"], "val"],[]],
-        null,
-        ...["some string"]
-    ];
+    // let array = arr![
+    //     // "some@gmail.com",
+    //     // 45,
+    //     // ["value", 5],
+    //     // {key: "value"},
+    //     5,
+    //     [],
+    //     ...[23, "some val"],
+    //     ...["sdfsf"],
+    //     ...arr,
+    //     {nested: {key: "value"}},
+    //     "some value",
+    //     // nested array
+    //     [[["val"], "val"],[]],
+    //     null,
+    //     ...["some string"]
+    // ];
 
     println!("{}", person);
-    println!("{}", val!(array));
+    // println!("{}", val!(array));
 
 }

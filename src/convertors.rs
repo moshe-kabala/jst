@@ -2,6 +2,12 @@ use crate::{Obj, Val};
 use num::ToPrimitive;
 use std::{self, collections::HashMap};
 
+// todo
+// val.is_equal(&str | String | bool | obj!{}, arr![], regex);
+// val.is_match(&str | String | bool | obj!{}, arr![], regex );
+// val.is_bool(); // 
+// val.is_str();
+
 impl std::convert::From<String> for Val {
     fn from(v: String) -> Val {
         Val::Str(v)

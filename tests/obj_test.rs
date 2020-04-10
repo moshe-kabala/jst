@@ -1,7 +1,7 @@
 #[macro_use(obj, val, arr)]
-extern crate json;
+extern crate jst;
 
-use json::{Obj, Val};
+use jst::{Obj, Val};
 
 #[test]
 fn test_json_macro() {
