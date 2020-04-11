@@ -67,7 +67,7 @@ impl Index<usize> for Val {
     fn index(&self, key: usize) -> &Val {
         match self {
             Val::Array(a) => {
-                if (key >= a.len()) {
+                if key >= a.len() {
                     &Val::Undef
                 } else {
                     &a[key]
