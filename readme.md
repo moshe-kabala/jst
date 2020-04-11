@@ -190,6 +190,11 @@ if let Ok(v) = val) {
 ## Contribute
 Any donation is welcome, open Issues, PR and request for new features.
 
+# Limitation
+When using in an obj! macro with a big object you need to config 
+#![recursion_limit = "512"]
+
+
 ## Todo
 
 1. Improve parser tests
