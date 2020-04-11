@@ -33,3 +33,11 @@ fn test_value_macro() {
     })
   );
 }
+
+#[test]
+fn test_array_out_of_range() {
+  let _array = val!(["string", 45]);
+  assert_eq!(_array[3], Val::Undef);
+  assert_eq!(_array[0], Val::Str("string".into()));
+
+}
