@@ -57,7 +57,7 @@ pub fn array_to_str(arr: &Vec<Val>) -> String {
             .map(|line| format!("    {}", line))
             .collect::<Vec<String>>()
             .join("\n");
-        lines
+        format! ("[\n{}\n]", lines)
     }
 }
 
