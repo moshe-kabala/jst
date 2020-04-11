@@ -1,6 +1,6 @@
 [package]
 name = "jst"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["moshe.kabala@gmail.com <31233967+moshe-kabala@users.noreply.github.com>"]
 edition = "2018"
 license = "MIT"
